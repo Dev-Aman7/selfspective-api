@@ -1,15 +1,18 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import './src/langchain/setup.js';
 
-import './config.js'; // why? see here - https://www.npmjs.com/package/dotenv#how-do-i-use-dotenv-with-import-
-
-import connect from './src/components/db/setup.js';
+// import connect from './src/components/db/setup.js';
 import userRouter from './src/components/user/index.js';
+import chat from './src/components/chat/index.js';
 import swaggerRouter from './src/docs/index.js';
 
+dotenv.config();
+
 // connect to db
-connect();
+// connect();
 const app = express();
 
 app.use(logger('dev'));
@@ -18,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', userRouter);
+app.use('/chat', chat);
 app.use('/swagger', swaggerRouter);
 
 // error handler
